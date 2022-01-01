@@ -95,9 +95,15 @@ todays_dict = {
     'comune':int(totale_comune_tot),
     'terraferma':int(terraferma_tot)
 }
-with open(f"{date_str}.json", 'w') as fj:
+output_folder = "data"
+if not os.path.exists(output_folder):
+    os.mkdir(output_folder)
+daily_json_path = os.path.join(output_folder, f"{date_str}.json")
+with open(daily_json_path, 'w') as fj:
     json.dump(todays_dict, fj, indent=2)
 todays_dict['date'] = date_str
-with open("today.json", 'w') as fj:
+current_json_path = os.path.join(output_folder, "today.json")
+with open(current_json_path, 'w') as fj:
     json.dump(todays_dict, fj, indent=2)
-big_df.to_csv(f"aggregated_data_{date_str}.csv")
+dataframe_path = os.path.join(output_folder, f"aggregated_data_{date_str}.csv")
+big_df.to_csv(dataframe_path)
