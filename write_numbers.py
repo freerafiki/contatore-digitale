@@ -5,6 +5,7 @@ import pdb
 import matplotlib.pyplot as plt
 import utils as ut
 import json
+from datetime import datetime, timedelta
 
 base_folder = "/Users/Palma/Documents/Projects/Contatore"
 # base_folder = "/root/opendata_ve"
@@ -16,7 +17,7 @@ comune_files = ut.get_files_list(os.path.join(base_folder, comune_folder))
 #last_isole_path = ut.get_last_file(os.path.join(base_folder, isole_path))
 #last_comune_path = ut.get_last_file(os.path.join(base_folder, comune_path))
 print(f"found {len(isole_files)} files")
-print("first:", isole_files[0])
+print("first:", comune_files[0])
 print("last:", isole_files[-1])
 
 ve_mu_bu = []
@@ -29,16 +30,26 @@ isole = []
 comune = []
 terraferma = []
 dates = []
-counter = 0
-num_files = ut.get_files_number(os.path.join(base_folder, isole_folder))
-for comune_file, isole_file in zip(comune_files, isole_files):
+num_files_i = ut.get_files_number(os.path.join(base_folder, isole_folder))
+num_files_c = ut.get_files_number(os.path.join(base_folder, isole_folder))
+iterations = max(num_files_i, num_files_c)
+start_day_string = comune_files[0][12:22]
+start_day = datetime.strptime(start_day_string, '%Y-%m-%d')
+last_day_string = comune_files[-1][12:22]
+last_day = datetime.strptime(last_day_string, '%Y-%m-%d')
+cur_date = start_day
+pdb.set_trace()
+for j in range(iterations):
+
+    #for comune_file, isole_file in zip(comune_files, isole_files):
     #print(f"Checking {comune_file[12:23]}..")
-    perc = int(counter / num_files * 100)
+    perc = int(j / iterations * 100)
     print(f"\rCompleted: {perc}%", end="")
-    counter += 1
     # Venezia Comune
-    comune_path = os.path.join(base_folder, comune_folder, comune_file)
-    comune_df = ut.df_comune(comune_path)
+    comune_file_name = f"popolazione_{cur_date.year:04d}-{cur_date.month:02d}-{cur_date.day:02d}_comune.xls"
+    comune_path = os.path.join(base_folder, comune_folder, comune_file_name)
+    if os.path.exists(comune_path):
+        comune_df = ut.df_comune(comune_path)
     #print("\nComune di Venezia\n")
     ve_mu_bu_values = comune_df.get_venezia_insulare()
     ve_mu_bu_tot = np.sum(ve_mu_bu_values[2:])
@@ -49,8 +60,10 @@ for comune_file, isole_file in zip(comune_files, isole_files):
     terraferma_tot = totale_comune_tot - lido_tot - ve_mu_bu_tot
     #print(f"insulare: {ve_mu_bu_tot}\nlido: {lido_tot}\ncomune: {totale_comune_tot}\n")
 
-    isole_path = os.path.join(base_folder, isole_folder, isole_file)
-    isole_df = ut.df_isole(isole_path)
+    isole_file_name = f"popolazione_{cur_date.year:04d}-{cur_date.month:02d}-{cur_date.day:02d}_isole.xls"
+    isole_path = os.path.join(base_folder, isole_folder, isole_file_name)
+    if os.path.exists(isole_path):
+        isole_df = ut.df_isole(isole_path)
     #print("\nVenezia e Isole\n")
     est_values = isole_df.get_est()
     est_tot = np.sum(est_values[2:])
@@ -67,7 +80,7 @@ for comune_file, isole_file in zip(comune_files, isole_files):
     #print(f"murano: {murano_tot}\nburano: {burano_tot}")
     #print("tot:", isole_tot)
 
-    date = comune_file[12:22].replace("_", "-")
+    date = f"{cur_date.year:04d}-{cur_date.month:02d}-{cur_date.day:02d}"
     dates.append(date)
     ve_mu_bu.append(ve_mu_bu_tot)
     lido.append(lido_tot)
@@ -79,6 +92,10 @@ for comune_file, isole_file in zip(comune_files, isole_files):
     comune.append(totale_comune_tot)
     terraferma.append(terraferma_tot)
 
+    # step to next day
+    cur_date += timedelta(days=1)
+
+pdb.set_trace()
 big_df = pd.DataFrame()
 big_df['ve_mu_bu'] = ve_mu_bu
 big_df['lido'] = lido
@@ -88,7 +105,7 @@ big_df['murano'] = murano
 big_df['burano'] = burano
 big_df['terraferma'] = terraferma
 big_df['dates'] = dates
-date_str = comune_file[12:22]
+date_str = f"{last_day.year:04d}-{last_day.month:02d}-{last_day.day:02d}"
 todays_dict = {
     've_mu_bu':int(ve_mu_bu_tot),
     'lido':int(lido_tot),
