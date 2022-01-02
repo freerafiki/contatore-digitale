@@ -15,6 +15,9 @@ isole_files = ut.get_files_list(os.path.join(base_folder, isole_folder))
 comune_files = ut.get_files_list(os.path.join(base_folder, comune_folder))
 #last_isole_path = ut.get_last_file(os.path.join(base_folder, isole_path))
 #last_comune_path = ut.get_last_file(os.path.join(base_folder, comune_path))
+print(f"found {len(isole_files)} files")
+print("first:", isole_files[0])
+print("last:", isole_files[-1])
 
 ve_mu_bu = []
 lido = []
@@ -97,6 +100,7 @@ todays_dict = {
     'comune':int(totale_comune_tot),
     'terraferma':int(terraferma_tot)
 }
+print("last day (today) is ", date_str)
 output_folder = "data"
 if not os.path.exists(output_folder):
     os.mkdir(output_folder)
