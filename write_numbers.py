@@ -7,6 +7,7 @@ import utils as ut
 import json
 
 base_folder = "/Users/Palma/Documents/Projects/Contatore"
+# base_folder = "/root/opendata_ve"
 isole_folder = "isole_VE"
 comune_folder = "comune_VE"
 
