@@ -83,6 +83,7 @@ big_df['ovest'] = ovest
 big_df['murano'] = murano
 big_df['burano'] = burano
 big_df['terraferma'] = terraferma
+big_df['dates'] = dates
 date_str = comune_file[12:22]
 todays_dict = {
     've_mu_bu':int(ve_mu_bu_tot),
@@ -105,5 +106,5 @@ todays_dict['date'] = date_str
 current_json_path = os.path.join(output_folder, "today.json")
 with open(current_json_path, 'w') as fj:
     json.dump(todays_dict, fj, indent=2)
-dataframe_path = os.path.join(output_folder, f"aggregated_data_{date_str}.csv")
+dataframe_path = os.path.join(output_folder, f"aggregated_data_today.csv")
 big_df.to_csv(dataframe_path)
