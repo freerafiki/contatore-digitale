@@ -38,7 +38,7 @@ start_day = datetime.strptime(start_day_string, '%Y-%m-%d')
 last_day_string = comune_files[-1][12:22]
 last_day = datetime.strptime(last_day_string, '%Y-%m-%d')
 cur_date = start_day
-pdb.set_trace()
+#pdb.set_trace()
 for j in range(iterations):
 
     #for comune_file, isole_file in zip(comune_files, isole_files):
@@ -95,7 +95,7 @@ for j in range(iterations):
     # step to next day
     cur_date += timedelta(days=1)
 
-pdb.set_trace()
+#pdb.set_trace()
 big_df = pd.DataFrame()
 big_df['ve_mu_bu'] = ve_mu_bu
 big_df['lido'] = lido
