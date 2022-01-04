@@ -41,7 +41,7 @@ delta = last_day - start_day
 iterations = delta.days
 print(f"we have {iterations} days")
 #pdb.set_trace()
-for j in range(iterations):
+for j in range(iterations+1):
 
     #for comune_file, isole_file in zip(comune_files, isole_files):
     #print(f"Checking {comune_file[12:23]}..")
