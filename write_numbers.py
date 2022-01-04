@@ -32,12 +32,14 @@ terraferma = []
 dates = []
 num_files_i = ut.get_files_number(os.path.join(base_folder, isole_folder))
 num_files_c = ut.get_files_number(os.path.join(base_folder, isole_folder))
-iterations = max(num_files_i, num_files_c)
 start_day_string = comune_files[0][12:22]
 start_day = datetime.strptime(start_day_string, '%Y-%m-%d')
 last_day_string = comune_files[-1][12:22]
 last_day = datetime.strptime(last_day_string, '%Y-%m-%d')
 cur_date = start_day
+delta = d1 - d0
+iterations = delta.days()
+print(f"we have {iterations} days")
 #pdb.set_trace()
 for j in range(iterations):
 
