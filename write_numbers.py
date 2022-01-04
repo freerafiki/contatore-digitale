@@ -37,7 +37,7 @@ start_day = datetime.strptime(start_day_string, '%Y-%m-%d')
 last_day_string = comune_files[-1][12:22]
 last_day = datetime.strptime(last_day_string, '%Y-%m-%d')
 cur_date = start_day
-delta = d1 - d0
+delta = last_day - start_day
 iterations = delta.days()
 print(f"we have {iterations} days")
 #pdb.set_trace()
