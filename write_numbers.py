@@ -38,7 +38,8 @@ last_day_string = comune_files[-1][12:22]
 last_day = datetime.strptime(last_day_string, '%Y-%m-%d')
 cur_date = start_day
 delta = last_day - start_day
-iterations = delta.days()
+pdb.set_trace()
+iterations = delta.days
 print(f"we have {iterations} days")
 #pdb.set_trace()
 for j in range(iterations):
