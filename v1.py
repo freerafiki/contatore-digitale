@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 st.title("Contatore Digitale")
 st.markdown("## Centro Storico")
 st.write("A Venezia, in centro storico, siamo (sulla carta)")
-with open('today.json') as json_file:
+with open('data/today.json') as json_file:
     today_data = json.load(json_file)
 #st.metric(label="", value=today_data['ve_mu_bu'])
 st.markdown(f"## {today_data['ve_mu_bu']}")
@@ -29,7 +29,7 @@ st.markdown(f"- {today_data['terraferma']} in terraferma")
 st.markdown(f"- {today_data['comune']} in totale nel comune")
 
 st.markdown("## Grafici")
-df = pd.read_csv("aggregated_data_today.csv")
+df = pd.read_csv("data/aggregated_data_today.csv")
 #st.line_chart(df['ve_mu_bu'].values / 10000)
 st.markdown("#### Centro Storico")
 fig, ax = plt.subplots()

@@ -123,7 +123,12 @@ print("last day (today) is ", date_str)
 output_folder = "data"
 if not os.path.exists(output_folder):
     os.mkdir(output_folder)
-daily_json_path = os.path.join(output_folder, f"{date_str}.json")
+    
+daily_output_folder = output_folder + "/daily"
+if not os.path.exists(daily_output_folder):
+    os.mkdir(daily_output_folder)
+
+daily_json_path = os.path.join(daily_output_folder, f"{date_str}.json")
 with open(daily_json_path, 'w') as fj:
     json.dump(todays_dict, fj, indent=2)
 todays_dict['date'] = date_str
