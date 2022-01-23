@@ -20,7 +20,15 @@ class df_comune(object):
     """a class with base methods"""
 
     def __init__(self, file_path):
-        self.df = pd.read_html(file_path)[0]
+        try:
+            self.df = pd.read_html(file_path)[0]
+            self.isEmpty = False
+        except:
+            self.df = None 
+            self.isEmpty = True
+
+    def isEmpty(self):
+        return self.isEmpty
 
     def get_venezia_insulare(self):
         """venezia, murano, burano"""
@@ -52,7 +60,15 @@ class df_isole(object):
     """a class with base methods"""
 
     def __init__(self, file_path):
-        self.df = pd.read_html(file_path)[0]
+        try:
+            self.df = pd.read_html(file_path)[0]
+            self.isEmpty = False
+        except:
+            self.df = None 
+            self.isEmpty = True
+
+    def isEmpty(self):
+        return self.isEmpty
 
     def get_est(self):
         """san marco, castello, cannaregio, sant'elena"""

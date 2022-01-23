@@ -51,7 +51,9 @@ for j in range(iterations+1):
     comune_file_name = f"popolazione_{cur_date.year:04d}-{cur_date.month:02d}-{cur_date.day:02d}_comune.xls"
     comune_path = os.path.join(base_folder, comune_folder, comune_file_name)
     if os.path.exists(comune_path):
-        comune_df = ut.df_comune(comune_path)
+        new_comune_df = ut.df_comune(comune_path)
+    if not comune_df.isEmpty():
+        comune_df = new_comune_df
     #print("\nComune di Venezia\n")
     ve_mu_bu_values = comune_df.get_venezia_insulare()
     ve_mu_bu_tot = np.sum(ve_mu_bu_values[2:])
@@ -65,7 +67,9 @@ for j in range(iterations+1):
     isole_file_name = f"popolazione_{cur_date.year:04d}-{cur_date.month:02d}-{cur_date.day:02d}_isole.xls"
     isole_path = os.path.join(base_folder, isole_folder, isole_file_name)
     if os.path.exists(isole_path):
-        isole_df = ut.df_isole(isole_path)
+        new_isole_df = ut.df_isole(isole_path)
+    if not isole_df.isEmpty():
+        isole_df = new_isole_df
     #print("\nVenezia e Isole\n")
     est_values = isole_df.get_est()
     est_tot = np.sum(est_values[2:])
