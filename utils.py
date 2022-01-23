@@ -28,7 +28,9 @@ class df_comune(object):
             self.isEmpty = True
 
     def isValid(self):
-        return !self.isEmpty
+        if self.isEmpty is True:
+            return False
+        return True
 
     def get_venezia_insulare(self):
         """venezia, murano, burano"""
@@ -68,7 +70,9 @@ class df_isole(object):
             self.isEmpty = True
 
     def isValid(self):
-        return !self.isEmpty
+        if self.isEmpty is True:
+            return False
+        return True
 
     def get_est(self):
         """san marco, castello, cannaregio, sant'elena"""
