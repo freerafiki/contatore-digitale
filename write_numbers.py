@@ -7,8 +7,11 @@ import utils as ut
 import json
 from datetime import datetime, timedelta
 
-base_folder = "/Users/Palma/Documents/Projects/Contatore"
-# base_folder = "/root/opendata_ve"
+current_path = os.getcwd()
+if "Palma" in current_path:
+    base_folder = "/Users/Palma/Documents/Projects/Contatore"
+else:
+    base_folder = "/root/opendata_ve"
 isole_folder = "isole_VE"
 comune_folder = "comune_VE"
 
@@ -52,7 +55,7 @@ for j in range(iterations+1):
     comune_path = os.path.join(base_folder, comune_folder, comune_file_name)
     if os.path.exists(comune_path):
         new_comune_df = ut.df_comune(comune_path)
-    if new_comune_df.isEmpty() is False:
+    if new_comune_df.isValid() is True:
         comune_df = new_comune_df
     #print("\nComune di Venezia\n")
     ve_mu_bu_values = comune_df.get_venezia_insulare()
@@ -68,7 +71,7 @@ for j in range(iterations+1):
     isole_path = os.path.join(base_folder, isole_folder, isole_file_name)
     if os.path.exists(isole_path):
         new_isole_df = ut.df_isole(isole_path)
-    if new_isole_df.isEmpty() is False:
+    if new_isole_df.isValid() is True:
         isole_df = new_isole_df
     #print("\nVenezia e Isole\n")
     est_values = isole_df.get_est()
