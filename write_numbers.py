@@ -52,7 +52,7 @@ for j in range(iterations+1):
     comune_path = os.path.join(base_folder, comune_folder, comune_file_name)
     if os.path.exists(comune_path):
         new_comune_df = ut.df_comune(comune_path)
-    if not new_comune_df.isEmpty():
+    if new_comune_df.isEmpty() is False:
         comune_df = new_comune_df
     #print("\nComune di Venezia\n")
     ve_mu_bu_values = comune_df.get_venezia_insulare()
@@ -68,7 +68,7 @@ for j in range(iterations+1):
     isole_path = os.path.join(base_folder, isole_folder, isole_file_name)
     if os.path.exists(isole_path):
         new_isole_df = ut.df_isole(isole_path)
-    if not new_isole_df.isEmpty():
+    if new_isole_df.isEmpty() is False:
         isole_df = new_isole_df
     #print("\nVenezia e Isole\n")
     est_values = isole_df.get_est()
