@@ -79,9 +79,11 @@ for j in range(iterations+1):
         burano_values = isole_df.get_burano()
         burano_tot = np.sum(burano_values[2:])
         isole_values = isole_df.get_total()
-        isole_tot = np.sum(isole_values[2:])
+        isole_tot = np.sum(isole_values[2:]) + lido_tot
+        centro_storico_tot = est_tot + ovest_tot
 
         todays_dict = {
+            'centro_storico':int(centro_storico_tot),
             've_mu_bu':int(ve_mu_bu_tot),
             'lido':int(lido_tot),
             'est':int(est_tot),
@@ -99,5 +101,3 @@ for j in range(iterations+1):
         print(f"{hypothetic_file_name} found, skipping it")
     # step to next day
     cur_date += timedelta(days=1)
-
-    

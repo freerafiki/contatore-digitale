@@ -23,6 +23,7 @@ print(f"found {len(isole_files)} files")
 print("first:", comune_files[0])
 print("last:", isole_files[-1])
 
+centro_storico = []
 ve_mu_bu = []
 lido = []
 est = []
@@ -83,8 +84,8 @@ for j in range(iterations+1):
     burano_values = isole_df.get_burano()
     burano_tot = np.sum(burano_values[2:])
     isole_values = isole_df.get_total()
-    isole_tot = np.sum(isole_values[2:])
-
+    isole_tot = np.sum(isole_values[2:]) + lido_tot
+    centro_storico_tot = est_tot + ovest_tot
     #print(f"est: {est_tot}\novest: {ovest_tot}")
     #print(f"murano: {murano_tot}\nburano: {burano_tot}")
     #print("tot:", isole_tot)
@@ -100,12 +101,14 @@ for j in range(iterations+1):
     isole.append(isole_tot)
     comune.append(totale_comune_tot)
     terraferma.append(terraferma_tot)
+    centro_storico.append(centro_storico_tot)
 
     # step to next day
     cur_date += timedelta(days=1)
 
 #pdb.set_trace()
 big_df = pd.DataFrame()
+big_df['centro_storico'] = centro_storico
 big_df['ve_mu_bu'] = ve_mu_bu
 big_df['lido'] = lido
 big_df['est'] = est
@@ -115,7 +118,9 @@ big_df['burano'] = burano
 big_df['terraferma'] = terraferma
 big_df['dates'] = dates
 date_str = f"{last_day.year:04d}-{last_day.month:02d}-{last_day.day:02d}"
+# Values
 todays_dict = {
+    'centro_storico':int(centro_storico_tot),
     've_mu_bu':int(ve_mu_bu_tot),
     'lido':int(lido_tot),
     'est':int(est_tot),
@@ -130,7 +135,7 @@ print("last day (today) is ", date_str)
 output_folder = "data"
 if not os.path.exists(output_folder):
     os.mkdir(output_folder)
-    
+
 daily_output_folder = output_folder + "/daily"
 if not os.path.exists(daily_output_folder):
     os.mkdir(daily_output_folder)
