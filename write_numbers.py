@@ -115,7 +115,9 @@ big_df['est'] = est
 big_df['ovest'] = ovest
 big_df['murano'] = murano
 big_df['burano'] = burano
+big_df['isole'] = isole
 big_df['terraferma'] = terraferma
+big_df['comune'] = comune
 big_df['dates'] = dates
 date_str = f"{last_day.year:04d}-{last_day.month:02d}-{last_day.day:02d}"
 # Values
