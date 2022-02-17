@@ -8,12 +8,24 @@ import json
 from datetime import datetime, timedelta
 
 current_path = os.getcwd()
+#pdb.set_trace()
 if "Palma" in current_path:
     base_folder = "/Users/Palma/Documents/Projects/Contatore"
+elif "palma" in current_path:
+    base_folder = os.path.join(current_path, os.pardir)
 else:
     base_folder = "/root/opendata_ve"
 isole_folder = "isole_VE"
 comune_folder = "comune_VE"
+
+# output paths
+output_folder = "data"
+daily_output_folder = os.path.join(output_folder, "daily")
+# create them if needed
+if not os.path.exists(output_folder):
+    os.mkdir(output_folder)
+if not os.path.exists(daily_output_folder):
+    os.mkdir(daily_output_folder)
 
 isole_files = ut.get_files_list(os.path.join(base_folder, isole_folder))
 comune_files = ut.get_files_list(os.path.join(base_folder, comune_folder))
@@ -54,43 +66,67 @@ for j in range(iterations+1):
     # Venezia Comune
     comune_file_name = f"popolazione_{cur_date.year:04d}-{cur_date.month:02d}-{cur_date.day:02d}_comune.xls"
     comune_path = os.path.join(base_folder, comune_folder, comune_file_name)
+    isole_file_name = f"popolazione_{cur_date.year:04d}-{cur_date.month:02d}-{cur_date.day:02d}_isole.xls"
+    isole_path = os.path.join(base_folder, isole_folder, isole_file_name)
+
+    # if we are missing a day, just keep the data from yesterday
+    # since we start reading files, the first file is not missing
+    # so comune_df and isole_df should always be initialized
     if os.path.exists(comune_path):
         new_comune_df = ut.df_comune(comune_path)
     if new_comune_df.isValid() is True:
         comune_df = new_comune_df
-    #print("\nComune di Venezia\n")
-    ve_mu_bu_values = comune_df.get_venezia_insulare()
-    ve_mu_bu_tot = np.sum(ve_mu_bu_values[2:])
-    lido_values = comune_df.get_venezia_litorale()
-    lido_tot = np.sum(lido_values[2:])
-    totale_comune_values = comune_df.get_totale_comune()
-    totale_comune_tot = np.sum(totale_comune_values[2:])
-    terraferma_tot = totale_comune_tot - lido_tot - ve_mu_bu_tot
-    #print(f"insulare: {ve_mu_bu_tot}\nlido: {lido_tot}\ncomune: {totale_comune_tot}\n")
-
-    isole_file_name = f"popolazione_{cur_date.year:04d}-{cur_date.month:02d}-{cur_date.day:02d}_isole.xls"
-    isole_path = os.path.join(base_folder, isole_folder, isole_file_name)
     if os.path.exists(isole_path):
         new_isole_df = ut.df_isole(isole_path)
     if new_isole_df.isValid() is True:
         isole_df = new_isole_df
-    #print("\nVenezia e Isole\n")
-    est_values = isole_df.get_est()
-    est_tot = np.sum(est_values[2:])
-    ovest_values = isole_df.get_ovest()
-    ovest_tot = np.sum(ovest_values[2:])
-    murano_values = isole_df.get_murano()
-    murano_tot = np.sum(murano_values[2:])
-    burano_values = isole_df.get_burano()
-    burano_tot = np.sum(burano_values[2:])
-    isole_values = isole_df.get_total()
-    isole_tot = np.sum(isole_values[2:]) + lido_tot
-    centro_storico_tot = est_tot + ovest_tot
-    #print(f"est: {est_tot}\novest: {ovest_tot}")
-    #print(f"murano: {murano_tot}\nburano: {burano_tot}")
-    #print("tot:", isole_tot)
 
+    # now each has a dictionary of values
+    ve_ins_dict = comune_df.get_venezia_insulare()
+    lido_dict = comune_df.get_venezia_litorale()
+    comune_dict = comune_df.get_totale_comune()
+    est_dict = isole_df.get_est()
+    ovest_dict = isole_df.get_ovest()
+    murano_dict = isole_df.get_murano()
+    burano_dict = isole_df.get_burano()
+    isole_dict = isole_df.get_total()
+    labels_dict = ut.get_labels()
+    terraferma_dict = {}
+    centro_storico_dict = {}
+    # using a loop to fill the values we are not reading but calculating
+    # it's easier to make and to read and there are very few keys,
+    # so no problem
+    for _key in ve_ins_dict.keys():
+        terraferma_dict[_key] = comune_dict[_key] - lido_dict[_key] - ve_ins_dict[_key]
+        centro_storico_dict[_key] = est_dict[_key] + ovest_dict[_key]
+
+    # if we do not have the daily file, repair and save it
+    # otherwise skip
     date = f"{cur_date.year:04d}-{cur_date.month:02d}-{cur_date.day:02d}"
+    cur_daily_json_path = os.path.join(daily_output_folder, f"{date}.json")
+    if not os.path.exists(cur_daily_json_path):
+        json_info = {
+            'labels':labels_dict,
+            'centro_storico':centro_storico_dict,
+            've_mu_bu':ve_ins_dict,
+            'lido':lido_dict,
+            'est':est_dict,
+            'ovest':ovest_dict,
+            'murano':murano_dict,
+            'burano':burano_dict,
+            'isole':isole_dict,
+            'comune':comune_dict,
+            'terraferma':terraferma_dict
+        }
+        with open(cur_daily_json_path, 'w') as fj:
+            json.dump(json_info, fj, indent=2)
+
+    print("stopping here, TODO: aggregate the data and save in the .csv")
+    pdb.set_trace()
+
+    # preparing the values for the aggregated data
+
+
     dates.append(date)
     ve_mu_bu.append(ve_mu_bu_tot)
     lido.append(lido_tot)
@@ -134,13 +170,6 @@ todays_dict = {
     'terraferma':int(terraferma_tot)
 }
 print("last day (today) is ", date_str)
-output_folder = "data"
-if not os.path.exists(output_folder):
-    os.mkdir(output_folder)
-
-daily_output_folder = output_folder + "/daily"
-if not os.path.exists(daily_output_folder):
-    os.mkdir(daily_output_folder)
 
 daily_json_path = os.path.join(daily_output_folder, f"{date_str}.json")
 with open(daily_json_path, 'w') as fj:
