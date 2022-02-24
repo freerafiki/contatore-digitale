@@ -92,7 +92,9 @@ fig.add_trace(go.Scatter(
     #groupnorm='fraction' # sets the normalization for the sum of the stackgroup
 ))
 
-fig.update_layout(yaxis_range=(np.min(y_vals)*0.999, np.max(y_vals)*1.001))
+# this would be only once if we plotted more data lines, that's why here
+fig.update_layout(yaxis_range=(np.min(y_vals)*0.999, np.max(y_vals)*1.001),
+                  margin={'l':10, 'r':10, 't':10, 'b':10})
 st.plotly_chart(fig, use_container_width=True)
 st.sidebar.markdown("## Altro")
 pie_chart = st.sidebar.checkbox('Grafico a torta dei residenti divisi per età', value=True)
