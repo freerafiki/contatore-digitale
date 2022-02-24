@@ -78,25 +78,25 @@ Scegliendo dal menu la zona il grafico si aggiorna automaticamente.
 
 # aliceblue, antiquewhite, aqua, aquamarine, azure, beige, bisque, black, blanchedalmond, blue, blueviolet, brown, burlywood, cadetblue, chartreuse, chocolate, coral, cornflowerblue, cornsilk, crimson, cyan, darkblue, darkcyan, darkgoldenrod, darkgray, darkgrey, darkgreen, darkkhaki, darkmagenta, darkolivegreen, darkorange, darkorchid, darkred, darksalmon, darkseagreen, darkslateblue, darkslategray, darkslategrey, darkturquoise, darkviolet, deeppink, deepskyblue, dimgray, dimgrey, dodgerblue, firebrick, floralwhite, forestgreen, fuchsia, gainsboro, ghostwhite, gold, goldenrod, gray, grey, green, greenyellow, honeydew, hotpink, indianred, indigo, ivory, khaki, lavender, lavenderblush, lawngreen, lemonchiffon, lightblue, lightcoral, lightcyan, lightgoldenrodyellow, lightgray, lightgrey, lightgreen, lightpink, lightsalmon, lightseagreen, lightskyblue, lightslategray, lightslategrey, lightsteelblue, lightyellow, lime, limegreen, linen, magenta, maroon, mediumaquamarine, mediumblue, mediumorchid, mediumpurple, mediumseagreen, mediumslateblue, mediumspringgreen, mediumturquoise, mediumvioletred, midnightblue, mintcream, mistyrose, moccasin, navajowhite, navy, oldlace, olive, olivedrab, orange, orangered, orchid, palegoldenrod, palegreen, paleturquoise, palevioletred, papayawhip, peachpuff, peru, pink, plum, powderblue, purple, red, rosybrown, royalblue, rebeccapurple, saddlebrown, salmon, sandybrown, seagreen, seashell, sienna, silver, skyblue, slateblue, slategray, slategrey, snow, springgreen, steelblue, tan, teal, thistle, tomato, turquoise, violet, wheat, white, whitesmoke, yellow, yellowgreen
 fig = go.Figure()
-colors = ['mediumpurple', 'aquamarine', 'steelblue', 'mediumseagreen', \
-          'tomato', 'turquoise', 'springgreen', 'brown']
-for color, label in zip(colors, labels):
-    if not label == 'total':
-        y_vals = df[f"{str_root}_{label}"].values
-        fig.add_trace(go.Scatter(
-            x=df['dates'], y=y_vals,
-            hoverinfo='x+y',
-            mode='lines',
-            line=dict(width=0.5, color=color),
-            name=labels[label],
-            stackgroup='one', # define stack group
-            groupnorm='' # sets the normalization for the sum of the stackgroup
-        ))
+#colors = ['mediumpurple', 'aquamarine', 'steelblue', 'mediumseagreen', \
+#          'tomato', 'turquoise', 'springgreen', 'brown']
+#for color, label in zip(colors, labels):
+#    if not label == 'total':
+y_vals = df[f"{str_root}_total"].values
+fig.add_trace(go.Scatter(
+    x=df['dates'],
+    y=y_vals,
+    hoverinfo='x+y',
+    fill='tozeroy',
+    line=dict(width=0.5, color='turquoise')
+    #stackgroup='one', # define stack group
+    #groupnorm='fraction' # sets the normalization for the sum of the stackgroup
+))
 
-#fig.update_layout(yaxis_range=(0, np.max(df[f"{str_root}_total"].values)*2))
+fig.update_layout(yaxis_range=(np.min(y_vals)*0.999, np.max(y_vals)*1.001))
 st.plotly_chart(fig, use_container_width=True)
 st.sidebar.markdown("## Altro")
-pie_chart = st.sidebar.checkbox('Grafico a torta dei residenti divisi per età')
+pie_chart = st.sidebar.checkbox('Grafico a torta dei residenti divisi per età', value=True)
 if pie_chart:
     st.markdown("""
 ### Grafico a torta
