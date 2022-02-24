@@ -19,29 +19,34 @@ def get_files_number(folder):
 
 def create_info_dict(row_values):
     info_dict = {
-        'total': int(np.sum(row_values[2:])),
         'kids': int(np.sum(row_values[2:4])),
         'teenagers': int(np.sum(row_values[4:6])),
         'young': int(np.sum(row_values[6:9])),
         'adults': int(np.sum(row_values[9:12])),
         'experienced': int(np.sum(row_values[12:15])),
         'pensionates':int(np.sum(row_values[15:18])),
-        'over80': int(np.sum(row_values[18:]))
+        'over80': int(np.sum(row_values[18:])),
+        'total': int(np.sum(row_values[2:]))
     }
     return info_dict
 
 def get_labels():
     expl_dict = {
-        'total': "totale",
         'kids': "bambini (0-9)",
         'teenagers': "ragazzi (10-19)",
         'young': "giovani (20-34)",
         'adults': "adulti (35-49)",
         'experienced': "esperti (50-64)",
         'pensionates': "pensionati (65-80)",
-        'over80': "over 80 (80+)"
+        'over80': "over 80 (80+)",
+        'total': "totale"
     }
     return expl_dict
+
+def append_values(fulL_data, single_day, labels):
+
+    for label in labels:
+        fulL_data[label].append(single_day[label])
 
 def plot_pie_chart(info_dict):
 
